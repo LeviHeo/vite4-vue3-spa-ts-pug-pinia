@@ -8,7 +8,7 @@ const routes = [
         title:'Vue SPA Home'
       },
       path: '/',
-      name: 'entry',
+      name: 'index',
       component: Home
     },
     {
@@ -16,7 +16,7 @@ const routes = [
           title:'Vue SPA Home'
         },
         path: '/home',
-        name: 'index',
+        name: 'home',
         component: Home
     },
     {

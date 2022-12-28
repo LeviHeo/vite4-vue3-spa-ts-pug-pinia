@@ -22,24 +22,83 @@ main(:class="'page page-'+currentPage")
       const route  = useRoute();
       const router = useRouter();
       const store  = useGlobalStore();
-
-      console.log(store)
-
       const currentPage = ref(null);
 
-      const fetchPageInfo =async (route:any, to:any) => {
+      console.log(store.currentLang)
+
+      const fetchPageInfo = async (route:any, to:any) => {
         currentPage.value = to.name
       }
 
-      router.beforeEach(async (to, from)=>{
+      router.beforeEach(async (to, from) =>{
+        return await fetchPageInfo(route, to);
         if(to.name != '404') {
           return await fetchPageInfo(route, to);
         }
       })
 
+      const scrollY:any = ref(0);
+      window.addEventListener('scroll', function(){
+        scrollY.value = window.pageYOffset;
+      });
+
       const winH:any = ref(0);
       winH.value = window.innerHeight;
+
+      provide('scrollY', scrollY);
       provide('winH', winH);
+
+      const detectNavigator = () => {
+        let browser;
+        let agent:any = navigator.userAgent.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+        if (navigator.userAgent.match(/Edge/i) || navigator.userAgent.match(/Trident.*rv[ :]*11\./i)) {
+            browser = "msie";
+        }
+        else {
+            browser = agent[1].toLowerCase();
+        }
+        store.isBrowser = browser;
+        return document.documentElement.className += ' '+browser;
+      }
+
+      const detectResponsive = () => {
+        const winW  = window.innerWidth;
+        const range = store.breakPoint;
+
+        const updatePrefix = (idx:number) => {
+          store.isPrefix = range[idx].prefix
+          store.isScreen = range[idx].screen
+        }
+
+        winW > range[0].break ? updatePrefix(0) : winW > range[1].break ? updatePrefix(1) : winW > range[2].break ? updatePrefix(2) : updatePrefix(3);
+      }
+
+      const setPrefixClass = (to:any) => {
+        const wrapper = document.documentElement.classList;
+        const arr = store.breakPoint;
+        if(!wrapper.contains(to)) {
+          for (let idx = 0; idx < arr.length; idx++) {
+            const el = arr[idx];
+            wrapper.contains(el.screen) ? wrapper.remove(el.screen):'';
+          }
+          return document.documentElement.className += ' '+to;
+        }
+      }
+
+      const resizeHandler = () => {
+        detectResponsive();
+        winH.value = window.innerHeight;
+      }
+
+      watch(() => store.isScreen, async (to: any, from: any) => {
+        setPrefixClass(to);
+      })
+
+      onMounted(() =>{
+        detectNavigator();
+        detectResponsive();
+        window.addEventListener('resize', resizeHandler);
+      })
 
       return {
         currentPage

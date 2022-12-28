@@ -1,0 +1,21 @@
+$layouts: (
+    mobile: 320px, // prefix: sm
+    tablet: 768px, // prefix: md
+    device: 320px,
+    desktop: 1024px, // prefix: lg
+    desktop-lg: 1440px,
+    desktop-xl: 1600px,
+    desktop-xxl: 1920px,
+);
+
+$layouts-max: (
+    mobile: 767px,
+    tablet: 1023px,
+    device: 1023px
+);
+
+$colors: (
+    bodytext: #1A1A18,
+    primary: #0F79B8,
+);
+$bodytext: map-get($colors, 'bodytext');

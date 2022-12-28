@@ -49,7 +49,7 @@ export default defineConfig({
     }
   },
   build: {
-    manifest:true,
+    manifest:false,
     chunkSizeWarningLimit:500,
     rollupOptions: {
       output: {
@@ -57,17 +57,17 @@ export default defineConfig({
         entryFileNames: 'assets/js/[name]-[hash].js',
 
         assetFileNames: ({name}) => {
-          if (/\.(gif|jpe?g|png|svg)$/.test(name ?? '')){
-              return 'assets/images/[name]-[hash][extname]';
-          }
+			if (/\.(gif|jpe?g|png|svg|webp)$/.test(name ?? '')){
+				return 'assets/images/[name]-[hash][extname]';
+			}
 
-		  if (/\.(woff|eot)$/.test(name ?? '')) {
-			return 'assets/fonts/[name]-[hash][extname]';
-		}
+			if (/\.(woff|woff2)$/.test(name ?? '')) {
+				return 'assets/fonts/[name]-[hash][extname]';
+			}
 
-          if (/\.css$/.test(name ?? '')) {
-              return 'assets/css/[name]-[hash][extname]';
-          }
+			if (/\.css$/.test(name ?? '')) {
+				return 'assets/css/[name]-[hash][extname]';
+			}
           // default value
           // ref: https://rollupjs.org/guide/en/#outputassetfilenames
           return 'assets/[name]-[hash][extname]';
