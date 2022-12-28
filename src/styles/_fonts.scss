@@ -1,0 +1,28 @@
+$path: '@/assets/fonts/Roboto/';
+@font-face {
+    font-family: 'Roboto Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Roboto Regular'), url($path+'Roboto-Regular.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Roboto Bold';
+    font-style: normal;
+    font-weight: normal;
+    src:url($path+'Roboto-Bold.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Roboto Thin';
+    font-style: normal;
+    font-weight: normal;
+    src:url($path+'Roboto-Thin.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Roboto Light';
+    font-style: normal;
+    font-weight: normal;
+    src:url($path+'Roboto-Light.woff') format('woff');
+}
