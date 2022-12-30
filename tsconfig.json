@@ -16,12 +16,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
   },
   "vueCompilerOptions": {
     "plugins": [
       "@volar/vue-language-plugin-pug"
-    ]
+    ],
   },
   "include": ["env.d.ts", "src/**/*", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.config.json" }]

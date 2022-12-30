@@ -6,7 +6,7 @@ main(:class="'page page-'+currentPage")
   <script lang="ts">
   import { defineComponent, watch, ref, computed, inject, reactive, provide, onMounted} from 'vue'
   import { useRouter, useRoute } from 'vue-router'
-  import { useGlobalStore } from '@/stores';
+  import { useGlobalStore, useNavStore } from '@/stores';
   import { useI18n } from 'vue-i18n'
   import axios from 'axios'
 
@@ -22,15 +22,22 @@ main(:class="'page page-'+currentPage")
       const route  = useRoute();
       const router = useRouter();
       const store  = useGlobalStore();
+      const menus = useNavStore();
+      const i18n = useI18n();
+      
       const currentPage = ref(null);
 
-      console.log(store.currentLang)
+      store.currentLang == ''? store.currentLang = store.defaultLang : '';
+      console.log('current lang'+store.currentLang)
 
       const fetchPageInfo = async (route:any, to:any) => {
-        currentPage.value = to.name
+        currentPage.value = to.name;
       }
 
-      router.beforeEach(async (to, from) =>{
+      router.beforeEach(async (to:any, from:any) =>{
+
+
+
         return await fetchPageInfo(route, to);
         if(to.name != '404') {
           return await fetchPageInfo(route, to);

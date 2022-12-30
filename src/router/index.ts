@@ -1,43 +1,60 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import {
+  getLocale,
+  setI18nLanguage,
+  loadLocaleMessages,
+  SUPPORT_LOCALES,
+} from '@/i18n'
 
-import Home from '@/views/Home.vue'
+import type { Router, RouteRecordRaw } from 'vue-router'
+import type { I18n, Composer } from 'vue-i18n'
 
-const routes = [
+//import Home from '@/views/Home.vue'
+
+
+export function setupRouter(i18n: I18n): Router {
+  const locale = getLocale(i18n)
+
+  // setup routes
+  const routes: RouteRecordRaw[] = [
     {
-      meta: {
-        title:'Vue SPA Home'
-      },
-      path: '/',
-      name: 'index',
-      component: Home
+      path: '/:locale/',
+      name: 'home',
+      component: () => import(/* webpackChunkName: "home" */ "@/views/Home.vue")
     },
     {
-        meta: {
-          title:'Vue SPA Home'
-        },
-        path: '/home',
-        name: 'home',
-        component: Home
+      path: '/:locale/about',
+      name: 'about',
+      component: () => import(/* webpackChunkName: "home" */ "@/views/About.vue")
     },
     {
-        meta: {
-          title:'Vue SPA About'
-        },
-        path: '/about',
-        name: 'about',
-        component: () => import(/* webpackChunkName: "about" */ "@/views/About.vue")
+      path: '/:pathMatch(.*)*',
+      redirect: () => `/${locale}`
     }
-]
+  ]
 
+  // create router instance
+  const router = createRouter({
+    history: createWebHistory(),
+    routes
+  })
 
-const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes: routes
-})
+  // navigation guards
+  router.beforeEach(async to => {
+    const paramsLocale = to.params.locale as string
 
-router.beforeEach((to, from, next) => {
-  console.log(to)
-  next();
-})
+    // use locale if paramsLocale is not in SUPPORT_LOCALES
+    if (!SUPPORT_LOCALES.includes(paramsLocale)) {
+      return `/${locale}`
+    }
 
-export default router
+    // load locale messages
+    if (!i18n.global.availableLocales.includes(paramsLocale)) {
+      await loadLocaleMessages(i18n, paramsLocale)
+    }
+    // set i18n language
+    setI18nLanguage(i18n, paramsLocale)
+  })
+
+  return router
+}

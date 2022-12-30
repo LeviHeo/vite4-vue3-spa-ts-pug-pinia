@@ -1,12 +1,10 @@
 <template lang="pug">
 main
-    h1 Template
-    h2 SPA / Vite 4 / Vue 3 / Pug / TS / SASS / Router
+    h1 Home
+    h3 SPA / Vite 4 / Vue 3 / Pug / TS / SASS / Router / Pinia / Gsap / i18n
     h4 ver 2022.12
-    img(src="@/assets/images/vite.svg" style="width:100px")
-    div#test
-        .box
-            span box1
+    img(src="@/assets/images/vite.svg" style="width:60px")
+
     section
     section
     section
@@ -20,12 +18,15 @@ main
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
     gsap.registerPlugin(ScrollTrigger);
 
+    import { useI18n } from 'vue-i18n'
+    
+
     export default defineComponent({
         name: 'Home',
         components: {
-
         },
         setup() {
+            const text = useI18n();
             const triggers = ScrollTrigger.getAll();
             const gsapSet = () => {
                 gsap.utils.toArray<HTMLElement>("section").forEach(function(section, index){
@@ -53,23 +54,14 @@ main
                 });
                 ScrollTrigger.clearMatchMedia();
             });
-            return {}
+            return {
+                text
+            }
         },
     });
 </script>
 
 <style scoped lang="scss">
-#test {
-    position: relative;
-    width:100%;
-    border:1px solid red;
-    overflow: hidden;
-    .box {
-        width:200px;
-        height:200px;
-        border:2px solid green;
-    }
-}
 section {
     border:2px solid red;
     min-height:100vh;
