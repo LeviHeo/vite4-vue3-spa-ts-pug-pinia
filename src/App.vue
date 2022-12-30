@@ -1,5 +1,12 @@
 <template lang="pug">
-Navigation
+<router-link :to="{ name: 'home', params: { locale } }">
+  | {{ t('navigations.home') }}
+</router-link>
+|
+<router-link :to="{ name: 'about', params: { locale } }">
+  | {{ t('navigations.about') }}
+</router-link>
+
 main(:class="'page page-'+currentPage")
   router-view
 </template>
@@ -8,6 +15,7 @@ main(:class="'page page-'+currentPage")
   import { useRouter, useRoute } from 'vue-router'
   import { useGlobalStore, useNavStore } from '@/stores';
   import { useI18n } from 'vue-i18n'
+  import { SUPPORT_LOCALES } from '@/i18n'
   import axios from 'axios'
 
 
@@ -23,8 +31,11 @@ main(:class="'page page-'+currentPage")
       const router = useRouter();
       const store  = useGlobalStore();
       const menus = useNavStore();
-      const i18n = useI18n();
+      const { t, locale } = useI18n() 
       
+      const currentLocale = ref(locale.value)
+    
+
       const currentPage = ref(null);
 
       store.currentLang == ''? store.currentLang = store.defaultLang : '';
@@ -107,8 +118,22 @@ main(:class="'page page-'+currentPage")
         window.addEventListener('resize', resizeHandler);
       })
 
+      watch(router.currentRoute, route => {
+      currentLocale.value = route.params.locale as string
+    })
+
+    watch(currentLocale, val => {
+      router.push({
+        name: router.currentRoute.value.name!,
+        params: { locale: val }
+      })
+    })
+    
+
       return {
-        currentPage
+        currentPage,
+        t, locale, currentLocale, supportLocales: SUPPORT_LOCALES 
+
       }
     },
   })
